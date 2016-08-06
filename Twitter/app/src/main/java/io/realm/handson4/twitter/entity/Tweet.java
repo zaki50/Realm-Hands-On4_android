@@ -13,16 +13,19 @@ public class Tweet extends RealmObject {
     private String screenName;
     private String text;
     private String iconUrl;
+    private boolean favorited;
 
     public Tweet() {
     }
 
     public Tweet(Status status) {
+        //https://dev.twitter.com/overview/api/twitter-ids-json-and-snowflake
         setId(status.getId());
         setCreatedAt(status.getCreatedAt());
         setScreenName(status.getUser().getScreenName());
         setText(status.getText());
         setIconUrl(status.getUser().getProfileImageURLHttps());
+        setFavorited(status.isFavorited());
     }
 
     public long getId() {
@@ -63,5 +66,13 @@ public class Tweet extends RealmObject {
 
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
+    }
+
+    public boolean isFavorited() {
+        return favorited;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
     }
 }
