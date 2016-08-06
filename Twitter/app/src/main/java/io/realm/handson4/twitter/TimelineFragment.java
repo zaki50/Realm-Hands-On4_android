@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import io.realm.Realm;
@@ -19,6 +22,23 @@ public class TimelineFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //noinspection ConstantConditions
+        final ListView listView = getListView();
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Tweet tweet = (Tweet) listView.getItemAtPosition(position);
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        tweet.setFavorited(!tweet.isFavorited());
+                    }
+                });
+            }
+        });
 
         realm = Realm.getDefaultInstance();
 
@@ -36,6 +56,7 @@ public class TimelineFragment extends ListFragment {
                 ((TextView) convertView.findViewById(R.id.screen_name)).setText(tweet.getScreenName());
                 ((TextView) convertView.findViewById(R.id.text)).setText(tweet.getText());
 
+                listView.setItemChecked(position, tweet.isFavorited());
                 return convertView;
             }
         };
