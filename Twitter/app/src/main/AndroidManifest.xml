@@ -35,6 +35,11 @@
 
         <activity android:name=".MainActivity"/>
 
+        <service
+            android:name=".UpdateService"
+            android:exported="false">
+        </service>
+
     </application>
 
 </manifest>
